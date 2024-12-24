@@ -1,52 +1,48 @@
 // index.js
-//  Timestamp Microservice Project Implementation
+// Timestamp Microservice Project Implementation
 
-// initialize the project
+// Initialize the project
 const express = require('express');
 const cors = require('cors');
 const app = express();
 
-// Enable CORS for cross origin access
+// Enable CORS for cross-origin access
 app.use(cors({ optionsSuccessStatus: 200 }));
 
-// serve static files from "public" directory
+// Serve static files from the "public" directory
 app.use(express.static('public'));
 
-// serve the main landing page
+// Serve the main landing page
 app.get("/", (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 // API implementation for timestamp microservice
 app.get("/api/:date?", (req, res) => {
-  const { date } = req.params
+  const { date } = req.params;
   let parsedDate;
 
-// Handle cases with no date provided
-if(!date) {
-  parsedDate = newDate();
-} else {
-  // If the date is a valid Unix timestamp, parse a number
-  if(!isNaN(date)) {
-    parsedDate = new Date(parseInt(date));
+  // Handle cases with no date provided
+  if (!date) {
+    parsedDate = new Date();
   } else {
-    parsedDate = newDate(date); // Parse as a new date string
+    // Handle Unix timestamps and ISO date strings
+    if (!isNaN(date)) {
+      parsedDate = new Date(parseInt(date));
+    } else {
+      parsedDate = new Date(date);
+    }
   }
-}
 
-// Handle invalid dates 
-if(parsedDate.tostring() === "Invalid Date") {
-  console.log(`invalid Date Encountered: ${date}`); // Log the invalid date for debugging
-  return res.json({ errror: "Invalid Date" });
-}
+  // Handle invalid dates
+  if (isNaN(parsedDate.getTime())) {
+    return res.json({ error: "Invalid Date" });
+  }
 
-// Log successful requests for monitoring
-console.log(`Valid Request Processed: Date=${parsedDate.toUTCString()}`);
-
-// Return the Unix and UTC format
-res.json({
-  unix: parsedDate.getTime(),
-  utc: parsedDate.toUTCSTRING(),
+  // Return the Unix and UTC format
+  res.json({
+    unix: parsedDate.getTime(),
+    utc: parsedDate.toUTCString(),
   });
 });
 
@@ -55,20 +51,10 @@ app.use((req, res) => {
   res.status(404).json({ error: "Endpoint not found" });
 });
 
-// Start the server with error handling
+// Start the server
 const PORT = process.env.PORT || 3000;
-const startServer = () => {
-  try {
-    app.listen(PORT, () => {
-      console.log(`App is running and listening on port ${PORT}`);
-    }).on('error', (err) => {
-      console.error(`Failed to start server: $err.message}`);
-      process.exit(1); // Exit with failure code
-    });
-  } catch (error) {
-    console.error(`Unexpected error while starting server: ${error.message}`);
-    process.exit(1); // Exit with failure code
-  }
-};
+app.listen(PORT, () => {
+  console.log(`App is running and listening on port ${PORT}`);
+});
 
-startServer();
+
