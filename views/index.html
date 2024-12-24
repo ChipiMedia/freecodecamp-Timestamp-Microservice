@@ -1,23 +1,112 @@
 <!DOCTYPE html>
-
-<html>
-   <head>
-      <title>Timestamp Microservice | freeCodeCamp.org</title>
-      <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
-      <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
-      <link href="style.css" rel="stylesheet" type="text/css">
-   </head>
-
-   <body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timestamp Microservice</title>
+    <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+      body { 
+        font-family: 'Roboto', sans-serif;
+        background: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin: 20px 0;
+      }
+      .container {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 600px;
+        width: 90%;
+      }
+      .container h2 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      ul li {
+        margin: 5px 0;
+      }
+      ul li a {
+        color: #007BFF;
+        text-decoration: none;
+      }
+      ul li a:hover {
+        text-decoration: underline;
+      }
+      .form {
+        margin-top: 20px;
+      }
+      .form input {
+        width: calc(100% - 20px);
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .form button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        background: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .form button:hover {
+        backgorund: #0056b3;
+      }
+      .output {
+        margin-top: 20px;
+        padding: 10px;
+        background: #f4f4f9;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: #666;
+      }
+      .footer a {
+        color: #007BFF;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
     <h1>Timestamp Microservice</h1>
     <hr />
     <div class="container">
+      <h2>Test the API</h2>
+      <form class="form" id="timestamp-form">
+        <input type="text" id="date-input" placeholder="Enter a date or Unix timestamp">
+        <button type="submit">Get Timestamp</button>
+      </form>
+      <div class="output" id="output"></div>
+      <hr>
       <h2>Example Usage:</h2>
       <ul>
         <li><a href="api/2015-12-25">[project url]/api/2015-12-25</a></li>
         <li><a href="api/1451001600000">[project url]/api/1451001600000</a></li>
       </ul>
-
       <h2>Example Output:</h2>
       <p>
         <code>{"unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT"}</code>
@@ -25,8 +114,23 @@
     </div>
     <div class="footer">
       <p>
-        By <a href="https://www.freecodecamp.org/">freeCodeCamp.org</a>
+        By <a href="https://github.com/ChipiMedia and freeCodeCamp.org"</a>
       </p>
     </div>
+    <script>
+      document.getElementById('timestamp-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const date = document.getElementById('date-input').value;
+        const outputDiv = document.getElementById('output');
+        try {
+          const response = await fetch(`/api/${date}`);
+          const data = await response.json();
+          outputDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        } catch (err) {
+          outputDiv.innerHTML = `<p style="color: red;">Error fetching data. Please try again.</p>`;
+        }
+      });
+    </script>
   </body>
 </html>
+
