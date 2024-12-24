@@ -26,15 +26,15 @@ app.get("/api/:date?", (req, res) => {
   if (!date) {
     parsedDate = new Date();
   } else {
-    // Handle Unix timestamps and ISO date strings
+    // Handle Unix timestamps (ensure numeric strings are treated as integers)
     if (!isNaN(date)) {
       parsedDate = new Date(parseInt(date));
     } else {
-      parsedDate = new Date(date);
+      parsedDate = new Date(date); // Parse as an ISO 8601 string or other formats
     }
   }
 
-  // Handle invalid dates
+  // Check for invalid dates
   if (isNaN(parsedDate.getTime())) {
     return res.json({ error: "Invalid Date" });
   }
@@ -56,5 +56,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`App is running and listening on port ${PORT}`);
 });
+
 
 
